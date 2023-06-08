@@ -7,6 +7,8 @@ import searchImg from "../assets/Search.svg";
 import arrowDownImg from "../assets/ArrowDown.svg";
 import logoMobileImg from "../assets/LogoMobile.svg";
 import { useNavigate } from "react-router-dom";
+import LoginBtnMobile from "./LoginBtn/LoginBtnMobile";
+import LogoutBtnMobile from "./LogoutBtn/LogoutBtnMobile";
 
 function HeaderMobile() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,24 +31,20 @@ function HeaderMobile() {
             </CategoryContainer>
             <LoginContainer>
               {isLoggedIn ? (
-                <LoggedIn
-                  onClick={() => {
-                    setIsLoggedIn(false);
-                  }}
-                >
-                  <LogoutBtn>
-                    <LogoutImg src={logoutImg} />
-                  </LogoutBtn>
+                <LoggedIn>
+                  <LogoutBtnMobile
+                    onClickHandler={() => {
+                      setIsLoggedIn(false);
+                    }}
+                  />
                   <ProfileImg src={profileImg} />
                 </LoggedIn>
               ) : (
-                <LoggedOut
-                  onClick={() => {
+                <LoginBtnMobile
+                  onClickHandler={() => {
                     setIsLoggedIn(true);
                   }}
-                >
-                  <PersonImg src={personImg} />
-                </LoggedOut>
+                />
               )}
             </LoginContainer>
           </MiddleContainer>
@@ -143,38 +141,11 @@ const LoggedIn = styled.div`
   justify-content: flex-end;
   align-items: center;
 `;
-const LogoutBtn = styled.div`
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const LogoutImg = styled.img`
-  width: 14px;
-  height: 14px;
-  margin-right: 11px;
-`;
 const ProfileImg = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 18px;
   /* border: 1px solid #e8e9ee; */
-`;
-const LoggedOut = styled.div`
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  width: 38px;
-  height: 38px;
-  border: 1px solid #1a2254;
-  border-radius: 4px;
-`;
-const PersonImg = styled.img`
-  width: 10.8px;
-  height: 10.8px;
 `;
 const SearchBox = styled.div`
   width: 100%;

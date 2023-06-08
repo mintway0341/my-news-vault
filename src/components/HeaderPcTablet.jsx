@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import personImg from "../assets/person.svg";
-import logoutImg from "../assets/Logout.svg";
 import profileImg from "../assets/ProfileImg.png";
+import searchBlueImg from "../assets/SearchBlue.svg";
 import searchImg from "../assets/Search.svg";
 import logoPcImg from "../assets/LogoPC.svg";
 import logoMobileImg from "../assets/LogoMobile.svg";
 import { useNavigate } from "react-router-dom";
+import LoginBtnPcTablet from "./LoginBtn/LoginBtnPcTablet";
+import LogoutBtnPcTablet from "./LogoutBtn/LogoutBtnPcTablet";
 
 function HeaderPc({ isPc }) {
   const menus = ["정치", "경제", "IT/기술", "연예", "스포츠"];
   const [selectedMenu, setSelectedMenu] = useState("정치");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const onMenuTextClickHandler = (menu) => {
     setSelectedMenu(menu);
@@ -46,41 +49,48 @@ function HeaderPc({ isPc }) {
           </Menus>
           <LoginContainer ispc={isPc ? "true" : "false"}>
             {isLoggedIn ? (
-              <LoggedIn
-                onClick={() => {
-                  setIsLoggedIn(false);
-                }}
-              >
-                <LogoutBtn>
-                  <LogoutImg src={logoutImg} />
-                  <LogoutText>로그아웃</LogoutText>
-                </LogoutBtn>
+              <LoggedIn>
+                <LogoutBtnPcTablet
+                  onClickHandler={() => {
+                    setIsLoggedIn(false);
+                  }}
+                />
                 <ProfileImg src={profileImg} />
               </LoggedIn>
             ) : (
-              <LoggedOut
-                onClick={() => {
+              <LoginBtnPcTablet
+                onClickHandler={() => {
                   setIsLoggedIn(true);
                 }}
-              >
-                <PersonImg src={personImg} />
-                <LoginText>로그인</LoginText>
-              </LoggedOut>
+              />
             )}
           </LoginContainer>
         </TopContainer>
         <Line />
         <SearchContainer>
-          <SearchBox>
+          <SearchBox isfocused={isFocused ? "true" : "false"}>
             <Input
               placeholder="검색어를 입력해주세요"
               onSelect={() => {
                 navigate("/search");
               }}
+              onFocus={() => {
+                setIsFocused(true);
+              }}
+              onBlur={() => {
+                setIsFocused(false);
+              }}
             />
-            <SearchLine />
-            <SearchBtn>
-              <SearchImg src={searchImg} />
+            <SearchLine ishovered={isHovered ? "true" : "false"} />
+            <SearchBtn
+              onMouseEnter={() => {
+                setIsHovered(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(false);
+              }}
+            >
+              <SearchImg src={isHovered ? searchBlueImg : searchImg} />
             </SearchBtn>
           </SearchBox>
         </SearchContainer>
@@ -164,57 +174,18 @@ const LoggedIn = styled.div`
   justify-content: flex-end;
   align-items: center;
 `;
-const LogoutBtn = styled.div`
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const LogoutImg = styled.img`
-  width: 14px;
-  height: 14px;
-  margin-right: 7px;
-`;
-const LogoutText = styled.div`
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 19px;
-  color: #484e76;
-  margin-right: 24px;
-`;
 const ProfileImg = styled.img`
   width: 38px;
   height: 38px;
   border-radius: 19px;
   /* border: 1px solid #e8e9ee; */
 `;
-const LoggedOut = styled.div`
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  width: 98px;
-  height: 38px;
-  border: 1px solid #1a2254;
-  border-radius: 4px;
-`;
-const PersonImg = styled.img`
-  width: 10.8px;
-  height: 10.8px;
-`;
-const LoginText = styled.div`
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 19px;
-  color: #1a2254;
-`;
 const SearchBox = styled.div`
   width: 483px;
   height: 40px;
   background: #ffffff;
-  border: 1px solid #e8e9ee;
+  border: ${(props) =>
+    props.isfocused === "true" ? "1px solid #1A2254" : "1px solid #e8e9ee"};
   border-radius: 4px;
   display: flex;
   flex-direction: row;
@@ -234,7 +205,8 @@ const Input = styled.input`
 const SearchLine = styled.div`
   width: 0px;
   height: 32px;
-  border-left: 1px solid #e8e9ee;
+  border-right: ${(props) =>
+    props.ishovered === "true" ? "1px solid #112EBE" : "1px solid #e8e9ee"};
 `;
 const SearchBtn = styled.div`
   cursor: pointer;
@@ -243,6 +215,13 @@ const SearchBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0px 4px 4px 0px;
+  &:hover {
+    background-color: #e7eaf9;
+  }
+  &:active {
+    background-color: #b5beed;
+  }
 `;
 const SearchImg = styled.img`
   width: 14px;
